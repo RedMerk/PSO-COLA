@@ -1,9 +1,9 @@
-function create_model_files_new(pclname,seeds,n_Hs,Sigmas,PMDs,PFAs,casos)
+function create_model_files(pclname,seeds,n_Hs,Sigmas,PMDs,PFAs,casos)
 %Pablo Barrios  12/04/2022
 % inputs:
 % pclname: Nombre del point cloud.
 % roll,pitch,yaw: Angulos
-% tx,ty,tz: translacion
+% tx,ty,tz: translacionss
 % Nseed: Numero total de semillas
 % Sigma: Maxima cantidad de ruido espacial
 % PMD: Maxima cantidad de Miss-Detections

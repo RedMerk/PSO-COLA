@@ -25,9 +25,9 @@ for n_ref = 1:size(reference,2)
     for n_mod = 1:size(model,2)
         set_reference = sets_distancias(reference,n_ref);
         set_model = sets_distancias(model,n_mod);
-        if n_ref==1 & n_mod==1
+        if n_ref==1 && n_mod==1
             c1 = Init_c(set_reference,set_model);
-            disp(c1)
+            %disp(c1)
             %disp(c2)
         end
         %
@@ -35,8 +35,8 @@ for n_ref = 1:size(reference,2)
         if dist_fin < dist_ini
             dist_ini = dist_fin;
             Ho=H2;
-            disp(['fila = ' num2str(n_ref) '| columna = ' num2str(n_mod) ' | Best Cost = ' num2str(dist_ini) ' | c1 = ' num2str(c1) ' | c2 = ' num2str(c2)]);
-            disp(table(H,Ho,'VariableNames',{'Hgt','Hest'}))
+            %disp(['fila = ' num2str(n_ref) '| columna = ' num2str(n_mod) ' | Best Cost = ' num2str(dist_ini) ' | c1 = ' num2str(c1) ' | c2 = ' num2str(c2)]);
+            %disp(table(H,Ho,'VariableNames',{'Hgt','Hest'}))
         end
     end
 end
@@ -66,8 +66,8 @@ D = min(c1,D).^p;
 Xm = [];
 Ym = [];
 
-disp(n)
-disp(m)
+%disp(n)
+%disp(m)
 if n<=m
     Dt = D;
     [ass,~]=assignmentoptimal(Dt);

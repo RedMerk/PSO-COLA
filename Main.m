@@ -2,10 +2,8 @@
 name_dataset = 'bunny';
 sigma = 0.01;
 pMD = 50;
-pFA = 100;
-idxH = 1;
-index_seed = 1;
-caso = "ALL";
+pFA = 20;
+seed = 1;
 
 metodo = 'PSO';
 
@@ -21,72 +19,49 @@ shuffle = false;
 graficar = 'Model';
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%if crearData
-%    create_model_files_new(name_dataset,index_seed,idxH,sigma,pMD,pFA,{caso})
-%end
-
 if strcmp(name_dataset,'dragon')
     datos.reference_path = './Datasets/Dragon/dragon_red.txt';
-    datos.model_path = './Datasets/Dragon/dragon_model_sigma_0.010_pMD_50.0_pFA_0.txt';
     datos.reference_path_ply = './Datasets/Dragon/dragon_red.ply';
-    datos.model_path_ply = './Datasets/Dragon/dragon_model_sigma_0.010_pMD_50.0_pFA_0.ply';
 
     datos.Hgt_path = './Datasets/Dragon/HG_1.txt';
-
-    %datos.Figure_reference_path = '/home/pablo/Desktop/registration_alg/datasets/Original/dragon_vrip_res3.ply';
-    %datos.Figure_model_path = '/home/pablo/Desktop/registration_alg/datasets/dragon/ALL/H_1/seed_1/dragon_model_sigma_0.000_pMD_70.0_pFA_25_SinDownsampling.txt';
     
 elseif strcmp(name_dataset,'bunny')
     datos.reference_path = './Datasets/Bunny/bunny_red.txt';
-    datos.model_path = './Datasets/Bunny/bunny_model_sigma_0.010_pMD_50.0_pFA_0.txt';
     datos.reference_path_ply = './Datasets/Bunny/bunny_red.ply';
-    datos.model_path_ply = './Datasets/Bunny/bunny_model_sigma_0.010_pMD_50.0_pFA_0.ply';
+    reference_path_ply = './Datasets/Bunny/bun_zipper.ply';
 
     datos.Hgt_path = './Datasets/Bunny/HG_1.txt';
 
-    %datos.Figure_reference_path = '/home/pablo/Desktop/registration_alg/datasets/Original/bun_zipper.ply';
-    %datos.Figure_model_path = '/home/pablo/Desktop/registration_alg/datasets/bunny/ALL/H_1/seed_1/bunny_model_sigma_0.000_pMD_70.0_pFA_25_SinDownsampling.txt';
 end
 
-datos.reference = normalize_data3d(readpoints(datos.reference_path));
-datos.model = readpoints(datos.model_path);
+% ptReference = pcread(reference_path_ply);
+% Reference = ptReference.Location';
+% Reference = normalize_data3d(Reference);
+% ptReference = pointCloud(Reference');
+% ptReference = pcdownsample(ptReference,'gridAverage',0.2);
+% 
+% datos.reference = ptReference.Location';
 
+datos.reference = readpoints(datos.reference_path);
+datos.reference = normalize_data3d(datos.reference);
 datos.ptReference = pointCloud(datos.reference');
-datos.ptModel = pointCloud(datos.model');
 
 datos.Hgt = dlmread(datos.Hgt_path);
+%H = [-0.115367842515062 0.912136340787993 -0.393316102807029 0.413375856139019
+%0.267874349750556 -0.352721240514919 -0.896566260370829 0.132359246225410
+%-0.956521611705212 -0.208794210416636 -0.203645240644993 -0.402459595000590
+%0.000000000000000 0.000000000000000 0.000000000000000 1.000000000000000];
+%datos.Hgt = H;
 
-%Figure_Reference = pcread(datos.Figure_reference_path);
-%Figure_Reference = Figure_Reference.Location';
-%datos.Figure_reference = normalize_data3d(Figure_Reference);
-%datos.Figure_model = readpoints(datos.Figure_model_path);
+datos.model = create_model_files(datos.reference,datos.Hgt,sigma,pMD,pFA,seed);
+datos.ptModel = pointCloud(datos.model');
 
-%.txt correspondiente al set del modelo.
-H_gt = datos.Hgt;
+model_gt = AplicarH(datos.Hgt,datos.reference);
 
-model_gt = AplicarH(H_gt,datos.reference);
-
-[Valor_RMSE,H,t] = registrarMetodo(datos,model_gt,metodo,H_gt);
+[Valor_RMSE,H,t] = registrarMetodo(datos,model_gt,metodo,datos.Hgt);
 
 model_est = AplicarH(H,datos.reference);
-texto = "Prueba";
 graficarResultado(datos,model_gt)
-
-%switch graficar
-%    case 'Model'
-%        graficarModelo(datos,model_gt,H_gt,H,name_dataset);
-%    case 'Resultado'
-%       model_est = AplicarH(H,datos.reference);
-%       graficarResultado(datos,model_gt,model_est,H,H_gt,name_dataset,index_seed,sigma,pMD,pFA,metodo,texto)
-%    case 'Error'
-%        model_est = AplicarH(H,datos.reference);
-%        [TError,RError] = getError(H_gt,H);
-%        texto = sprintf("RMSE Value: %f\nTranslational Error: %f\nRotational Error: %f",Valor_RMSE,TError,RError);
-%        graficarError(H,H_gt,name_dataset,index_seed,sigma,pMD,pFA,texto,caso,datos,model_gt,model_est,metodo)
-%    case 'Paper1'
-%        graficarPaperModelo(name_dataset,datos,H);
-%    otherwise
-%end
 
 disp("Debug Mode")
 tiempo = datestr(datenum(0,0,0,0,0,t),'HH:MM:SS');
@@ -96,16 +71,8 @@ function [Valor_RMSE,H,t] = registrarMetodo(datos,model_gt,metodo,H_gt)
 t1 = tic;
     switch metodo
         case 'PSO'
-            %H_Init = Init_OSPA_12_oct(datos.reference,datos.model,datos.Hgt);
-            %H_IGCP = IGCP(datos.reference,datos.model,H_Init);
-            %H_Init = GoICP_reg(datos.reference_path,datos.model_path,output,0);
-            
-            %H_Init = datos.Hgt;
-            %H = PSO5_MM_reg(datos.reference,datos.model,H_Init,datos);
-            %H = PSO5_MM_reg(datos.reference,datos.model,inv(H_Init));
             H_Init = Init_OSPA_5_jul(datos.reference,datos.model,datos.Hgt);
             H_IGCP = IGCP(datos.reference,datos.model,H_Init);
-            %H = PSO5_MM_reg_L2(datos.reference,datos.model,eye(4),datos);
             H = PSO5_MM_reg(datos.reference,datos.model,H_IGCP,datos);
             model_est = AplicarH(H,datos.reference);
             Valor_RMSE = RMSE(model_gt,model_est);
