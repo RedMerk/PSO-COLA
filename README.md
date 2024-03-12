@@ -4,7 +4,7 @@
 
 # Installing
 
-## Matlab dependencies
+## Matlab Instalation
 PSO-COLA requires the following libraries installed:
 - Computer Vision Toolbox
 - Image Processing Toolbox
