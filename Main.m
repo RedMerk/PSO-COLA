@@ -5,7 +5,9 @@ pMD = 50;
 pFA = 100;
 idxH = 1;
 index_seed = 1;
-caso = "ALL"; 
+caso = "ALL";
+
+metodo = 'PSO';
 
 shuffle = false;
 % Opciones a graficar:
@@ -24,26 +26,26 @@ graficar = 'Model';
 %end
 
 if strcmp(name_dataset,'dragon')
-    datos.reference_path = '/Datasets/Dragon/'
-    datos.model_path = '/Datasets/Dragon/dragon_model_sigma_0.010_pMD_50.0_pFA_0.txt'
-    datos.reference_path_ply =
-    datos.model_path_ply = '/Datasets/Dragon/dragon_model_sigma_0.010_pMD_50.0_pFA_0.ply'
+    datos.reference_path = './Datasets/Dragon/dragon_red.txt';
+    datos.model_path = './Datasets/Dragon/dragon_model_sigma_0.010_pMD_50.0_pFA_0.txt';
+    datos.reference_path_ply = './Datasets/Dragon/dragon_red.ply';
+    datos.model_path_ply = './Datasets/Dragon/dragon_model_sigma_0.010_pMD_50.0_pFA_0.ply';
 
-    datos.Hgt_path = '/Datasets/Dragon/HG_1.txt'
+    datos.Hgt_path = './Datasets/Dragon/HG_1.txt';
 
-    datos.Figure_reference_path = '/home/pablo/Desktop/registration_alg/datasets/Original/dragon_vrip_res3.ply';
-    datos.Figure_model_path = '/home/pablo/Desktop/registration_alg/datasets/dragon/ALL/H_1/seed_1/dragon_model_sigma_0.000_pMD_70.0_pFA_25_SinDownsampling.txt';
+    %datos.Figure_reference_path = '/home/pablo/Desktop/registration_alg/datasets/Original/dragon_vrip_res3.ply';
+    %datos.Figure_model_path = '/home/pablo/Desktop/registration_alg/datasets/dragon/ALL/H_1/seed_1/dragon_model_sigma_0.000_pMD_70.0_pFA_25_SinDownsampling.txt';
     
 elseif strcmp(name_dataset,'bunny')
-    datos.reference_path = '/Datasets/Bunny/'
-    datos.model_path = '/Datasets/Bunny/dragon_model_sigma_0.010_pMD_50.0_pFA_0.txt'
-    datos.reference_path_ply =
-    datos.model_path_ply = '/Datasets/Bunny/dragon_model_sigma_0.010_pMD_50.0_pFA_0.ply'
+    datos.reference_path = './Datasets/Bunny/bunny_red.txt';
+    datos.model_path = './Datasets/Bunny/bunny_model_sigma_0.010_pMD_50.0_pFA_0.txt';
+    datos.reference_path_ply = './Datasets/Bunny/bunny_red.ply';
+    datos.model_path_ply = './Datasets/Bunny/bunny_model_sigma_0.010_pMD_50.0_pFA_0.ply';
 
-    datos.Hgt_path = '/Datasets/Bunny/HG_1.txt'
+    datos.Hgt_path = './Datasets/Bunny/HG_1.txt';
 
-    datos.Figure_reference_path = '/home/pablo/Desktop/registration_alg/datasets/Original/bun_zipper.ply';
-    datos.Figure_model_path = '/home/pablo/Desktop/registration_alg/datasets/bunny/ALL/H_1/seed_1/bunny_model_sigma_0.000_pMD_70.0_pFA_25_SinDownsampling.txt';
+    %datos.Figure_reference_path = '/home/pablo/Desktop/registration_alg/datasets/Original/bun_zipper.ply';
+    %datos.Figure_model_path = '/home/pablo/Desktop/registration_alg/datasets/bunny/ALL/H_1/seed_1/bunny_model_sigma_0.000_pMD_70.0_pFA_25_SinDownsampling.txt';
 end
 
 datos.reference = normalize_data3d(readpoints(datos.reference_path));
@@ -54,10 +56,10 @@ datos.ptModel = pointCloud(datos.model');
 
 datos.Hgt = dlmread(datos.Hgt_path);
 
-Figure_Reference = pcread(datos.Figure_reference_path);
-Figure_Reference = Figure_Reference.Location';
-datos.Figure_reference = normalize_data3d(Figure_Reference);
-datos.Figure_model = readpoints(datos.Figure_model_path);
+%Figure_Reference = pcread(datos.Figure_reference_path);
+%Figure_Reference = Figure_Reference.Location';
+%datos.Figure_reference = normalize_data3d(Figure_Reference);
+%datos.Figure_model = readpoints(datos.Figure_model_path);
 
 %.txt correspondiente al set del modelo.
 H_gt = datos.Hgt;
@@ -65,6 +67,10 @@ H_gt = datos.Hgt;
 model_gt = AplicarH(H_gt,datos.reference);
 
 [Valor_RMSE,H,t] = registrarMetodo(datos,model_gt,metodo,H_gt);
+
+model_est = AplicarH(H,datos.reference);
+texto = "Prueba";
+graficarResultado(datos,model_gt)
 
 %switch graficar
 %    case 'Model'

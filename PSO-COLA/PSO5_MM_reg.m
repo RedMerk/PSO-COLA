@@ -126,13 +126,13 @@ RMSE_vals = zeros(1,MaxIt);
 % f = figure(1);
 % set(gcf, 'Position', get(0, 'Screensize'));
 
-N = size(datos.Figure_model, 2);
-indicesAleatorios = randperm(N, int32(N/32));
-Figure_model = datos.Figure_model(:, indicesAleatorios);
+%N = size(datos.Figure_model, 2);
+%indicesAleatorios = randperm(N, int32(N/32));
+%Figure_model = datos.Figure_model(:, indicesAleatorios);
  
-N = size(datos.Figure_reference, 2);
-indicesAleatorios = randperm(N, int32(N/32));
-Figure_reference = datos.Figure_reference(:, indicesAleatorios);
+%N = size(datos.Figure_reference, 2);
+%indicesAleatorios = randperm(N, int32(N/32));
+%Figure_reference = datos.Figure_reference(:, indicesAleatorios);
 
 for it=1:MaxIt
     rng(it)
@@ -200,26 +200,26 @@ for it=1:MaxIt
 
     %%%%%%%%%%%Cambio grafico 18-05-2023%%%%%%%%%%%%%%%%%%%%%%%%
     
-    model_reg = model_set_order(Figure_model,inv(H));
-    model_regCloud = pointCloud(model_reg');
+    %model_reg = model_set_order(Figure_model,inv(H));
+    %model_regCloud = pointCloud(model_reg');
     
-    reference_Cloud = pointCloud(Figure_reference');
-    pointscolor=uint8(zeros(reference_Cloud.Count,3));
-    pointscolor(:,1)=255;
-    pointscolor(:,2)=0;
-    pointscolor(:,3)=0;
+    %reference_Cloud = pointCloud(Figure_reference');
+    %pointscolor=uint8(zeros(reference_Cloud.Count,3));
+    %pointscolor(:,1)=255;
+    %pointscolor(:,2)=0;
+    %pointscolor(:,3)=0;
 
-    reference_Cloud.Color = pointscolor;
+    %reference_Cloud.Color = pointscolor;
 
-    hold on
-    pcshow(reference_Cloud)
+    %hold on
+    %pcshow(reference_Cloud)
     
-    pointscolor=uint8(zeros(model_regCloud.Count,3));
-    pointscolor(:,1)=0;
-    pointscolor(:,2)=0;
-    pointscolor(:,3)=255;
+    %pointscolor=uint8(zeros(model_regCloud.Count,3));
+    %pointscolor(:,1)=0;
+    %pointscolor(:,2)=0;
+    %pointscolor(:,3)=255;
 
-    model_regCloud.Color = pointscolor;
+    %model_regCloud.Color = pointscolor;
     
     
 %     pcshow(model_regCloud)
